@@ -1,0 +1,12 @@
+backend/.venv/
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+backend/uploads/
+.git/
+node_modules/
+.next/
+securemailscope_phase1_plan.md
+README.md
