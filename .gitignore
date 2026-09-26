@@ -1,46 +1,8 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-.venv/
-venv/
-*.egg-info/
-dist/
-build/
-
-# Node
-node_modules/
-.next/
-out/
-
-# Uploads
-backend/uploads/*
-!backend/uploads/.gitkeep
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# IDE
-.vscode/
-.idea/
-
-# Graphify
-graphify-out/
-
-# OS
-Thumbs.db
-.DS_Store
-
-# Testing
-.pytest_cache/
-htmlcov/
-.coverage
-coverage/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-.pnp
+/node_modules
+/.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -48,7 +10,18 @@ coverage/
 !.yarn/releases
 !.yarn/versions
 
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
 # misc
+.DS_Store
 *.pem
 
 # debug
@@ -57,8 +30,11 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# env files (can opt-in for committing if needed)
+.env*
+
 # vercel
-.vercel/
+.vercel
 
 # typescript
 *.tsbuildinfo
