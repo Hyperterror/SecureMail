@@ -5,14 +5,14 @@
       "use": "@vercel/next"
     },
     {
-      "src": "backend/app/main.py",
+      "src": "api/index.py",
       "use": "@vercel/python"
     }
   ],
   "rewrites": [
     {
-      "source": "/api/backend/(.*)",
-      "destination": "/backend/app/main.py"
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     },
     {
       "source": "/(.*)",
