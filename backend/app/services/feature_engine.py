@@ -7,8 +7,6 @@ suitable for Isolation Forest.
 
 from __future__ import annotations
 
-import numpy as np
-
 from app.models.enums import (
     CertificateStatus,
     TLSVersion,
@@ -116,19 +114,15 @@ FEATURE_NAMES = [
 ]
 
 
-def extract_features(session: SessionInfo) -> np.ndarray:
+def extract_features(session: SessionInfo) -> list[float]:
     """
     Convert a session into a 12-dimensional feature vector.
-
-    The vector captures both security properties (TLS version, cipher strength)
-    and behavioral properties (packet count, duration, retransmissions)
-    for the Isolation Forest to learn from.
     """
     key_size = 0.0
     if session.certificate and session.certificate.public_key_size:
         key_size = float(session.certificate.public_key_size)
 
-    return np.array([
+    return [
         _tls_version_numeric(session.tls_version),
         _cipher_strength(session.cipher_suite),
         _key_exchange_score(session.key_exchange),
@@ -141,11 +135,11 @@ def extract_features(session: SessionInfo) -> np.ndarray:
         float(session.packet_count),
         session.session_duration_ms,
         float(session.retransmission_count),
-    ], dtype=np.float64)
+    ]
 
 
-def extract_features_batch(sessions: list[SessionInfo]) -> np.ndarray:
-    """Extract features for all sessions, returning a 2D array."""
+def extract_features_batch(sessions: list[SessionInfo]) -> list[list[float]]:
+    """Extract features for all sessions, returning a 2D array (list of lists)."""
     if not sessions:
-        return np.empty((0, len(FEATURE_NAMES)))
-    return np.vstack([extract_features(s) for s in sessions])
+        return []
+    return [extract_features(s) for s in sessions]

@@ -21,7 +21,6 @@ import random
 import uuid
 from datetime import datetime, timezone
 
-import numpy as np
 
 from app.models.enums import (
     CertificateStatus,
