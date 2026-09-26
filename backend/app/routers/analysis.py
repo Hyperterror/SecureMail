@@ -23,8 +23,19 @@ router = APIRouter(prefix="/api", tags=["analysis"])
 _analyses: dict[str, AnalysisResult] = {}
 _uploads: dict[str, dict[str, Any]] = {}
 
-UPLOAD_DIR = Path(__file__).resolve().parent.parent.parent / "uploads"
-UPLOAD_DIR.mkdir(exist_ok=True)
+# Prefer /tmp on read-only filesystems (Vercel), fall back to local uploads/
+_LOCAL_UPLOAD_DIR = Path(__file__).resolve().parent.parent.parent / "uploads"
+UPLOAD_DIR = Path("/tmp/securemail_uploads")
+
+
+def _ensure_upload_dir() -> Path:
+    """Create upload dir on demand; use /tmp if local path is read-only."""
+    try:
+        _LOCAL_UPLOAD_DIR.mkdir(exist_ok=True)
+        return _LOCAL_UPLOAD_DIR
+    except OSError:
+        UPLOAD_DIR.mkdir(exist_ok=True)
+        return UPLOAD_DIR
 
 # Allowed PCAP magic bytes
 _PCAP_MAGIC = [
@@ -62,7 +73,8 @@ async def upload_pcap(file: UploadFile) -> UploadResponse:
 
     # Generate analysis ID and save file
     analysis_id = str(uuid.uuid4())[:8]
-    save_path = UPLOAD_DIR / f"{analysis_id}{suffix}"
+    upload_dir = _ensure_upload_dir()
+    save_path = upload_dir / f"{analysis_id}{suffix}"
 
     file_size = 0
     with open(save_path, "wb") as out:
